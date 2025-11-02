@@ -54,5 +54,36 @@ def stick2_movement(keys_pressed,stick2):
     if keys_pressed[pygame.K_s] and stick2.y+VEL+stick2.height<HEIGHT-15:
         stick2.y+=VEL
 
+STICKMAN1_HIT=pygame.USEREVENT+1
+STICKMAN2_HIT=pygame.USEREVENT+2
+
+def handling_bullets(stick1_bullets,stick2_bullets,stick1,stick2):
+    for bullet in stick1_bullets:
+        bullet.x+=BUL_VEL
+        if stick2.colliderect(bullet):
+            pygame.event.post(pygame.event.Event(STICKMAN2_HIT))
+            stick1_bullets.remove(bullet)
+        elif bullet.x>WIDTH:
+            stick1_bullets.remove(bullet)
+    
+    for bullet in stick2_bullets:
+        bullet.x-=BUL_VEL
+        if stick1.colliderect(bullet):
+            pygame.event.post(pygame.event.Event(STICKMAN1_HIT))
+            stick2_bullets.remove(bullet)
+        elif bullet.x<0:
+            stick2_bullets.remove(bullet)
+
+
+
+def draw_winner(text):
+    draw_text=WINNER_FONT.render(text,1,"black")
+    screen.blit(draw_text,(WIDTH/2-draw_text.get_width()/2,HEIGHT/2-draw_text.get_height()/2))
+    pygame.display.update()
+    pygame.time.delay(5000)
+
+        
+
+
 
 pygame.quit()
